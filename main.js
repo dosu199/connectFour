@@ -1,4 +1,4 @@
-let currentColorOnMove = 1
+let currentColorOnMove = "red"
 let gameSholudEnd = false
 let gameBoard = []
 function createGameBoard(gameBoardWidth, gameBoardHeight) {
@@ -78,17 +78,17 @@ function placeEventListnerOnCell(gameBoardWidth, gameBoardHeight) {
 
 function placeYellowOrRedDot(x, y, gameBoardHeight, gameBoardWidth) {
     for (let j = gameBoardHeight; j >= 0; j--) {
-        if (currentColorOnMove == 1) {
+        if (currentColorOnMove == "red") {
             if (gameBoard[j][y] == 0 && gameBoard[x][y] == 0) {
                 gameBoard[j][y] = 1
-                currentColorOnMove++
+                currentColorOnMove = "yellow"
                 return
             }
         }
         else {
             if (gameBoard[j][y] == 0 && gameBoard[x][y] == 0) {
                 gameBoard[j][y] = 2
-                currentColorOnMove--
+                currentColorOnMove = "red"
                 return
             }
         }
@@ -97,7 +97,7 @@ function placeYellowOrRedDot(x, y, gameBoardHeight, gameBoardWidth) {
 }
 
 function playerOnMoveNodeColor(playerOnMoveNode) {
-    if (currentColorOnMove == 1) {
+    if (currentColorOnMove == "red") {
         playerOnMoveNode.style.backgroundColor = "#d96666"
     }
     else {
@@ -105,68 +105,65 @@ function playerOnMoveNodeColor(playerOnMoveNode) {
     }
 }
 
-let redWon = false
-let yellowWon = false
-let gameDraw = false
-function gameOver(gameBoardWidth, gameBoardHeight) {
-    for (let j = gameBoardHeight; j >= 0; j--) {
-        for (let i = 0; i < gameBoardWidth; i++) {
-            
-            if (j >= 0 && gameBoard[j][i] == 1 &&
-                gameBoard[j][i + 1] == 1 &&
-                gameBoard[j][i + 2] == 1 &&
-                gameBoard[j][i + 3] == 1) {
-                redWon = true
-            }
-            else if (j >= 3 && gameBoard[j][i] == 1 &&
-                gameBoard[j - 1][i] == 1 &&
-                gameBoard[j - 2][i] == 1 &&
-                gameBoard[j - 3][i] == 1) {
-                redWon = true
-            }
-            else if (j >= 3 && gameBoard[j][i] == 1 &&
-                gameBoard[j - 1][i - 1] == 1 &&
-                gameBoard[j - 2][i - 2] == 1 &&
-                gameBoard[j - 3][i - 3] == 1) {
-                redWon = true
-            }
-
-            else if (j >= 3 && gameBoard[j][i] == 1 &&
-                gameBoard[j - 1][i + 1] == 1 &&
-                gameBoard[j - 2][i + 2] == 1 &&
-                gameBoard[j - 3][i + 3] == 1) {
-                redWon = true
-            }
-
-            if (j >= 0 && gameBoard[j][i] == 2 &&
-                gameBoard[j][i + 1] == 2 &&
-                gameBoard[j][i + 2] == 2 &&
-                gameBoard[j][i + 3] == 2) {
-                yellowWon = true
-            }
-            else if (j >= 3 && gameBoard[j][i] == 2 &&
-                gameBoard[j - 1][i] == 2 &&
-                gameBoard[j - 2][i] == 2 &&
-                gameBoard[j - 3][i] == 2) {
-                yellowWon = true
-            }
-            else if (j >= 3 && gameBoard[j][i] == 2 &&
-                gameBoard[j - 1][i - 1] == 2 &&
-                gameBoard[j - 2][i - 2] == 2 &&
-                gameBoard[j - 3][i - 3] == 2) {
-                yellowWon = true
-            }
-
-            else if ( j >= 3 && gameBoard[j][i] == 2 &&
-                gameBoard[j - 1][i + 1] == 2 &&
-                gameBoard[j - 2][i + 2] == 2 &&
-                gameBoard[j - 3][i + 3] == 2) {
-                yellowWon = true
-            }
-
-        }
+function checkHorizontalAndVerticalWin(gameBoard, redPinValue, yellowPinValue, j, i) {
+    if (j >= 0 && gameBoard[j][i] == redPinValue &&
+        gameBoard[j][i + 1] == redPinValue &&
+        gameBoard[j][i + 2] == redPinValue &&
+        gameBoard[j][i + 3] == redPinValue) {
+        return redPinValue
+    }
+    else if (j >= 3 && gameBoard[j][i] == redPinValue &&
+        gameBoard[j - 1][i] == redPinValue &&
+        gameBoard[j - 2][i] == redPinValue &&
+        gameBoard[j - 3][i] == redPinValue) {
+        return redPinValue
     }
 
+    if (j >= 0 && gameBoard[j][i] == yellowPinValue &&
+        gameBoard[j][i + 1] == yellowPinValue &&
+        gameBoard[j][i + 2] == yellowPinValue &&
+        gameBoard[j][i + 3] == yellowPinValue) {
+        return yellowPinValue
+    }
+    else if (j >= 3 && gameBoard[j][i] == yellowPinValue &&
+        gameBoard[j - 1][i] == yellowPinValue &&
+        gameBoard[j - 2][i] == yellowPinValue &&
+        gameBoard[j - 3][i] == yellowPinValue) {
+        return yellowPinValue
+    }
+}
+
+function checkDiagonalWin(gameBoard, redPinValue, yellowPinValue, j, i) {
+    if (j >= 3 && gameBoard[j][i] == redPinValue &&
+        gameBoard[j - 1][i - 1] == redPinValue &&
+        gameBoard[j - 2][i - 2] == redPinValue &&
+        gameBoard[j - 3][i - 3] == redPinValue) {
+        return redPinValue
+    }
+
+    else if (j >= 3 && gameBoard[j][i] == redPinValue &&
+        gameBoard[j - 1][i + 1] == redPinValue &&
+        gameBoard[j - 2][i + 2] == redPinValue &&
+        gameBoard[j - 3][i + 3] == redPinValue) {
+        return redPinValue
+    }
+
+    else if (j >= 3 && gameBoard[j][i] == yellowPinValue &&
+        gameBoard[j - 1][i - 1] == yellowPinValue &&
+        gameBoard[j - 2][i - 2] == yellowPinValue &&
+        gameBoard[j - 3][i - 3] == yellowPinValue) {
+        return yellowPinValue
+    }
+
+    else if (j >= 3 && gameBoard[j][i] == yellowPinValue &&
+        gameBoard[j - 1][i + 1] == yellowPinValue &&
+        gameBoard[j - 2][i + 2] == yellowPinValue &&
+        gameBoard[j - 3][i + 3] == yellowPinValue) {
+        return yellowPinValue
+    }
+}
+
+function checkDraw(gameBoard, gameBoardHeight, gameBoardWidth) {
     let zerosCounter = 0
     for (let j = gameBoardHeight; j >= 0; j--) {
         for (let i = 0; i < gameBoardWidth; i++) {
@@ -176,29 +173,52 @@ function gameOver(gameBoardWidth, gameBoardHeight) {
 
         }
     }
+    return zerosCounter
+}
 
-    if (zerosCounter == 0) {
+function gameOver(gameBoardWidth, gameBoardHeight, redWon, yellowWon, gameDraw, redPinValue, yellowPinValue) {
+    for (let j = gameBoardHeight; j >= 0; j--) {
+        for (let i = 0; i < gameBoardWidth; i++) {
+            let horisontalAndVerticalWinResult = checkHorizontalAndVerticalWin(gameBoard, redPinValue, yellowPinValue, j, i)
+            if (horisontalAndVerticalWinResult == redPinValue) {
+                redWon = true
+            }
+            else if (horisontalAndVerticalWinResult == yellowPinValue) {
+                yellowWon = true
+            }
+
+            let verticalWinResult = checkDiagonalWin(gameBoard, redPinValue, yellowPinValue, j, i)
+            if (verticalWinResult == redPinValue) {
+                redWon = true
+            }
+            else if (horisontalAndVerticalWinResult == yellowPinValue) {
+                yellowWon = true
+            }
+        }
+    }
+    let checkDrawResult = checkDraw(gameBoard, gameBoardHeight, gameBoardWidth)
+
+    if (checkDrawResult == 0) {
         gameDraw = false
         setTimeout(() => {
             confirm("Draw!");
             gameSholudEnd = true
-        },10)
+        }, 10)
     }
 
-    
     if (redWon) {
         redWon = false
         setTimeout(() => {
             confirm("Red win!");
             gameSholudEnd = true
-        },10)
+        }, 10)
     }
     else if (yellowWon) {
         yellowWon = false
         setTimeout(() => {
             confirm("Yellow win!");
             gameSholudEnd = true
-        },10)
+        }, 10)
     }
 }
 
@@ -209,6 +229,13 @@ function main() {
 
     let playerOnMoveNode = document.getElementById("color")
 
+    let redWon = false
+    let yellowWon = false
+    let gameDraw = false
+
+    let redPinValue = 1
+    let yellowPinValue = 2
+
     let gameTable = document.getElementById("gameTable")
     createGameCells(gameBoardWidth, gameBoardHeight)
     placeEventListnerOnCell(gameBoardWidth, gameBoardHeight)
@@ -218,10 +245,10 @@ function main() {
         if (gameSholudEnd) {
             gameBoard = []
             gameBoard = createGameBoard(gameBoardWidth, gameBoardHeight)
-            currentColorOnMove = 1
+            currentColorOnMove = "red"
             gameSholudEnd = false
         }
-        gameOver(gameBoardWidth, gameBoardHeight)
+        gameOver(gameBoardWidth, gameBoardHeight, redWon, yellowWon, gameDraw, redPinValue, yellowPinValue)
         playerOnMoveNodeColor(playerOnMoveNode)
         window.requestAnimationFrame(loop);
     }

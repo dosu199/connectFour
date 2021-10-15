@@ -73,3 +73,9 @@ body {
     display: flex;
     flex-direction: column;
 }
+
+#legend {
+    display: flex; 
+    margin-left: 5px;
+     font-size: 17px;
+}
